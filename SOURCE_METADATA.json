@@ -1,0 +1,35 @@
+{
+  "generated_from": {
+    "twrpdtgen_tree": "P720S20.zip",
+    "stock_vendor_ramdisk": "stock_vendor_ramdisk.tar.gz"
+  },
+  "stock_vendor_boot": {
+    "sha256": "a2c6f81c1a48b5c70548abcf8db08ea5db1f51d39fba3e51fcb4b73360cfbc3c",
+    "partition_size": 104857600,
+    "header_version": 4,
+    "page_size": 4096,
+    "kernel_addr": "0x00008000",
+    "ramdisk_addr": "0x05400000",
+    "vendor_ramdisk_size": 23552746,
+    "tags_addr": "0x00000100",
+    "header_size": 2128,
+    "dtb_size": 170052,
+    "dtb_addr": "0x01f00000",
+    "vendor_cmdline": "console=ttyS1,115200n8 buildvariant=user",
+    "vendor_ramdisk_table_size": 108,
+    "vendor_ramdisk_table_entries": 1,
+    "vendor_ramdisk_entry_type": 1,
+    "vendor_ramdisk_entry_name": "",
+    "bootconfig_size": 0,
+    "vendor_ramdisk_magic": "02214c18"
+  },
+  "prebuilt_dtb": {
+    "size": 170052,
+    "sha256": "fa97ef3d5f28687d46224b541cfac6e01614c3a674b9be7ec12f924f64b6aff8"
+  },
+  "stock_modules": {
+    "ko_count": 165,
+    "modules_load_lines": 61,
+    "modules_load_recovery_lines": 164
+  }
+}

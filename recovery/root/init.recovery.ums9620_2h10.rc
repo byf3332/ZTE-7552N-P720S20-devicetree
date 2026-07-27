@@ -1,0 +1,2 @@
+# Device wrapper for the stock Unisoc recovery init fragment.
+import /init.recovery.common.rc

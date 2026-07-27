@@ -1,0 +1,2 @@
+# Fallback wrapper for UMS9620 hardware naming.
+import /init.recovery.common.rc
