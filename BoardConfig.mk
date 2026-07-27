@@ -112,7 +112,7 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 # Copy the selected stock vendor-ramdisk pieces after the normal TWRP recovery
 # root has been prepared. cp -a is intentional: first_stage_ramdisk contains
 # symlinks that must be preserved.
-BOARD_RECOVERY_IMAGE_PREPARE = cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
+BOARD_RECOVERY_IMAGE_PREPARE = mkdir -p $(TARGET_VENDOR_RAMDISK_OUT); cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
 
 # Recovery SELinux: first bring-up uses a permissive recovery policy while
 # retaining the stock Unisoc init fragment.
