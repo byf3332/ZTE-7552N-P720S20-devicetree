@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# This branch builds a temporary recovery-as-boot image only.
+PRODUCT_BUILD_VENDOR_BOOT_IMAGE := false
+
 # 64-bit recovery userspace.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 

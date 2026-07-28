@@ -96,8 +96,8 @@ TARGET_USES_MKE2FS := true
 # No standalone recovery partition.
 # Stock vendor_boot has one PLATFORM vendor-ramdisk entry and no RECOVERY fragment.
 BOARD_USES_RECOVERY_AS_BOOT :=
-BOARD_USES_GENERIC_KERNEL_IMAGE := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+# BOARD_USES_GENERIC_KERNEL_IMAGE := true
+# BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 TARGET_NO_RECOVERY := true
@@ -145,3 +145,35 @@ TW_INCLUDE_REPACKTOOLS := true
 TW_NO_SCREEN_TIMEOUT := true
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
+# -----------------------------------------------------------------
+# Temporary TWRP boot.img test mode
+# Used only with: fastboot boot boot.img
+# -----------------------------------------------------------------
+
+# Use the kernel extracted from the working stock/Magisk boot image.
+TARGET_NO_KERNEL :=
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+
+# Recovery-as-boot cannot coexist with the vendor_boot/GKI recovery mode.
+BOARD_USES_GENERIC_KERNEL_IMAGE :=
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT :=
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT :=
+BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT :=
+
+BOARD_USES_RECOVERY_AS_BOOT := true
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+TARGET_NO_RECOVERY := true
+TW_HAS_NO_RECOVERY_PARTITION := true
+
+# Do not build or repack vendor_boot in this branch.
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE :=
+TARGET_PREBUILT_DTB :=
+BOARD_VENDOR_CMDLINE :=
+
+# Build an ANDROID! header-v4 boot image, not a VNDRBOOT image.
+BOARD_MKBOOTIMG_ARGS := --header_version 4
+BOARD_RECOVERY_MKBOOTIMG_ARGS := --header_version 4
+
+# stock vendor_boot remains loaded by the bootloader and already supplies
+# Unisoc fstab, modules and vendor init files. Do not duplicate them here.
+BOARD_RECOVERY_IMAGE_PREPARE :=
