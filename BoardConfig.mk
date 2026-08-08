@@ -110,8 +110,9 @@ TARGET_NO_RECOVERY := true
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 
 # Seed the PLATFORM ramdisk with the complete stock vendor ramdisk.
-# TWRP recovery files are appended by the standard vendor_boot build path.
-BOARD_RECOVERY_IMAGE_PREPARE = python3 $(DEVICE_PATH)/tools/extract_stock_vendor_ramdisk.py $(DEVICE_PATH)/prebuilt/vendor_ramdisk_stock.lz4 $(TARGET_VENDOR_RAMDISK_OUT) $(LZ4) && python3 $(DEVICE_PATH)/tools/install_ramdisk_fs_config.py $(TARGET_OUT) && cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
+# Keep the stock early-init policy, contexts, properties and mount-point layout.
+# TWRP init/recovery binaries, libraries and recovery-specific files remain in the overlay.
+BOARD_RECOVERY_IMAGE_PREPARE = python3 $(DEVICE_PATH)/tools/extract_stock_vendor_ramdisk.py $(DEVICE_PATH)/prebuilt/vendor_ramdisk_stock.lz4 $(TARGET_VENDOR_RAMDISK_OUT) $(LZ4) && python3 $(DEVICE_PATH)/tools/install_ramdisk_fs_config.py $(TARGET_OUT) && cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/ && python3 $(DEVICE_PATH)/tools/prune_recovery_first_stage_overlay.py $(TARGET_RECOVERY_ROOT_OUT)
 
 # Recovery SELinux: first bring-up uses a permissive recovery policy while
 # retaining the stock Unisoc init fragment.
