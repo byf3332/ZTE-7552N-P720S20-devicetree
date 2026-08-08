@@ -65,6 +65,7 @@ BOARD_VENDOR_CMDLINE := console=ttyS1,115200n8 buildvariant=user
 
 # Stock vendor ramdisk uses legacy LZ4.
 BOARD_RAMDISK_USE_LZ4 := true
+TARGET_FS_CONFIG_GEN += $(DEVICE_PATH)/config.fs
 
 # Stock DTB extracted from vendor_boot.
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
@@ -109,10 +110,9 @@ TARGET_NO_RECOVERY := true
 
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 
-# Copy the selected stock vendor-ramdisk pieces after the normal TWRP recovery
-# root has been prepared. cp -a is intentional: first_stage_ramdisk contains
-# symlinks that must be preserved.
-BOARD_RECOVERY_IMAGE_PREPARE = mkdir -p $(TARGET_VENDOR_RAMDISK_OUT); cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
+# Seed the PLATFORM ramdisk with the complete stock vendor ramdisk.
+# TWRP recovery files are appended by the standard vendor_boot build path.
+BOARD_RECOVERY_IMAGE_PREPARE = python3 $(DEVICE_PATH)/tools/extract_stock_vendor_ramdisk.py $(DEVICE_PATH)/prebuilt/vendor_ramdisk_stock.lz4 $(TARGET_VENDOR_RAMDISK_OUT); cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
 
 # Recovery SELinux: first bring-up uses a permissive recovery policy while
 # retaining the stock Unisoc init fragment.
@@ -129,6 +129,7 @@ TW_INCLUDE_LPDUMP := true
 # Android 13 FBE metadata encryption. This enables the TWRP-side support;
 # vendor/keymaster integration may still require later device-specific work.
 TW_INCLUDE_CRYPTO := true
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libresetprop.so
 TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
 TW_USE_FSCRYPT_POLICY := 2
