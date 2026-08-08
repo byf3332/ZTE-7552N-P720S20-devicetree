@@ -65,7 +65,6 @@ BOARD_VENDOR_CMDLINE := console=ttyS1,115200n8 buildvariant=user
 
 # Stock vendor ramdisk uses legacy LZ4.
 BOARD_RAMDISK_USE_LZ4 := true
-TARGET_FS_CONFIG_GEN += $(DEVICE_PATH)/config.fs
 
 # Stock DTB extracted from vendor_boot.
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
@@ -112,7 +111,7 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 
 # Seed the PLATFORM ramdisk with the complete stock vendor ramdisk.
 # TWRP recovery files are appended by the standard vendor_boot build path.
-BOARD_RECOVERY_IMAGE_PREPARE = python3 $(DEVICE_PATH)/tools/extract_stock_vendor_ramdisk.py $(DEVICE_PATH)/prebuilt/vendor_ramdisk_stock.lz4 $(TARGET_VENDOR_RAMDISK_OUT); cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
+BOARD_RECOVERY_IMAGE_PREPARE = python3 $(DEVICE_PATH)/tools/extract_stock_vendor_ramdisk.py $(DEVICE_PATH)/prebuilt/vendor_ramdisk_stock.lz4 $(TARGET_VENDOR_RAMDISK_OUT) $(LZ4) && python3 $(DEVICE_PATH)/tools/install_ramdisk_fs_config.py $(TARGET_OUT) && cp -a $(DEVICE_PATH)/recovery/root/. $(TARGET_RECOVERY_ROOT_OUT)/
 
 # Recovery SELinux: first bring-up uses a permissive recovery policy while
 # retaining the stock Unisoc init fragment.

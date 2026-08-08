@@ -125,19 +125,23 @@ def extract_newc(data, root):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         raise SystemExit(
             f'usage: {sys.argv[0]} '
-            'STOCK_VENDOR_RAMDISK_LZ4 OUTPUT_DIR'
+            'STOCK_VENDOR_RAMDISK_LZ4 OUTPUT_DIR LZ4_TOOL'
         )
 
     source = Path(sys.argv[1])
     output = Path(sys.argv[2])
+    lz4_tool = Path(sys.argv[3])
+
+    if not lz4_tool.is_file() or not os.access(lz4_tool, os.X_OK):
+        raise SystemExit(f'lz4 tool is not executable: {lz4_tool}')
 
     output.mkdir(parents=True, exist_ok=True)
 
     result = subprocess.run(
-        ['lz4', '-dc', str(source)],
+        [str(lz4_tool), '-dc', str(source)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -147,6 +151,11 @@ def main():
         raise SystemExit(result.returncode)
 
     count = extract_newc(result.stdout, output)
+
+    if count != 654:
+        raise SystemExit(
+            f'unexpected stock vendor ramdisk entry count: {count}'
+        )
 
     print(
         f'Extracted {count} stock vendor-ramdisk entries '
