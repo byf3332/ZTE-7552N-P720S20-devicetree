@@ -1,66 +1,73 @@
-# TWRP device tree — ZTE 7552N / P720S20
+# TWRP device tree for ZTE 7552N / P720S20
 
-First bring-up tree for **ZTE 7552N (P720S20 / ums9620_2h10)**, based on the
-`twrpdtgen 3.0.0` output and the stock `vendor_boot_a.img` vendor ramdisk.
+This repository contains the TeamWin Recovery Project device tree for the
+ZTE 7552N (`P720S20`, `ums9620_2h10`).
 
-## Stock layout used by this tree
+## Status
 
-- Android 13
-- platform: `ums9620`
-- board: `ums9620_2h10`
-- no standalone `recovery` partition
-- recovery userspace is in `vendor_boot`
-- `vendor_boot` header v4, 4096-byte page size
-- `vendor_boot` partition size: 104857600 bytes
-- one vendor-ramdisk-table entry, type `PLATFORM`
-- no separate `RECOVERY` or `DLKM` vendor-ramdisk fragment
-- stock vendor ramdisk compression: legacy LZ4
-- stock DTB size: 170052 bytes
-- stock DTB address: `0x01f00000`
+**Testing**
 
-For that reason this tree uses
-`BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true`, but intentionally does
-**not** set `BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT`.
+The tree builds a TWRP 12.1 `vendor_boot` image. Device functionality is still
+being validated.
 
-## Stock pieces preserved
+## Device specifications
 
-The tree carries the stock:
+| Component | Value |
+| --- | --- |
+| Device | ZTE 7552N |
+| Product | P720S20 |
+| Platform | Unisoc UMS9620 |
+| Board | ums9620_2h10 |
+| Android version | Android 13 |
+| Architecture | arm64 |
+| Partition scheme | A/B |
+| Recovery location | `vendor_boot` |
+| Vendor boot header | Version 4 |
+| Vendor boot partition size | 104857600 bytes |
+| Vendor ramdisk compression | Legacy LZ4 |
 
-- `first_stage_ramdisk/` including all four UMS9620 fstab variants and fsck/snapuserd support
-- `/lib/modules` with `modules.load` and `modules.load.recovery`
-- Unisoc `init.recovery.common.rc`
-- UMS9620 ueventd rc files
-- stock recovery `servicemanager.recovery.rc` and `snapuserd.rc`
-- stock Unisoc configfs USB setup (`TW_EXCLUDE_DEFAULT_USB_INIT := true`)
-- DTB extracted from stock `vendor_boot`
+## Boot image layout
 
-It does **not** copy the stock recovery executable or the complete stock
-`/system` recovery userspace over TWRP.
+The device has no standalone recovery partition. Recovery resources are stored
+in `vendor_boot` using the stock layout:
 
-## Build
+- one vendor ramdisk table entry of type `PLATFORM`
+- no separate `RECOVERY` vendor ramdisk fragment
+- no separate `DLKM` vendor ramdisk fragment
+- generic kernel image boot flow
+- stock device tree blob
 
-Use the TWRP AOSP 12.1 manifest and place this directory at:
+The corresponding build configuration uses:
 
-`device/zte/P720S20`
-
-Then:
-
-```sh
-source build/envsetup.sh
-lunch twrp_P720S20-eng
-mka vendorbootimage
+```make
+BOARD_USES_GENERIC_KERNEL_IMAGE := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+TARGET_NO_RECOVERY := true
 ```
 
-Expected output:
+`BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT` is left unset to preserve the
+single-`PLATFORM` vendor ramdisk layout.
 
-`out/target/product/P720S20/vendor_boot.img`
+## Implementation
 
-Before any device-side test, run:
+The vendor ramdisk is constructed from the stock platform ramdisk and the TWRP
+recovery root.
 
-```sh
-python3 device/zte/P720S20/tools/check_vendor_boot.py out/target/product/P720S20/vendor_boot.img
-```
+The tree includes build-time handling for:
 
-The first milestone is a structurally correct `vendor_boot` that reaches TWRP
-with display, touch and ADB. FBE `/data` decryption is enabled in the build
-configuration but remains a later runtime validation item.
+- stock first-stage ramdisk files and fstab variants
+- stock kernel modules and recovery module load list
+- Virtual A/B and `snapuserd` support
+- Unisoc recovery init and ueventd configuration
+- first-stage fstab preparation
+- ramdisk file permission metadata
+- TWRP recovery SELinux policy and contexts
+- Unisoc configfs USB setup
+- Unisoc DRM/KMS display support
+- ext4, F2FS, EROFS and VFAT filesystems
+- fastbootd and recovery repacking tools
+- Android FBE and metadata encryption support
+
+The display build hook installs TeamWin's generic DRM/KMS backend before
+`libminuitwrp` is compiled. The backend uses standard KMS CRTC and page-flip
+operations suitable for the device's `sprd-drm` driver.
