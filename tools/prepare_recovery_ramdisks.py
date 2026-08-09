@@ -31,6 +31,21 @@ REQUIRED_TWRP_FILES = (
     "init.recovery.common.rc",
     "init.recovery.ums9620.rc",
     "init.recovery.ums9620_2h10.rc",
+    "vendor/etc/vintf/manifest.xml",
+    "system/bin/hw/android.hardware.gatekeeper@1.0-service.trusty",
+    "system/bin/hw/android.hardware.security.keymint@2.0-unisoc.service.trusty",
+    "system/lib64/p720s20-keymint/android.hardware.gatekeeper@1.0.so",
+    "system/lib64/p720s20-keymint/android.hardware.security.keymint-V1-ndk.so",
+    "system/lib64/p720s20-keymint/android.hardware.security.keymint-V2-ndk.so",
+    "system/lib64/p720s20-keymint/android.hardware.security.secureclock-V1-ndk.so",
+    "system/lib64/p720s20-keymint/android.hardware.security.sharedsecret-V1-ndk.so",
+    "system/lib64/p720s20-keymint/lib_android_keymaster_keymint_utils.so",
+    "system/lib64/p720s20-keymint/libkeymaster_messages.so",
+    "system/lib64/p720s20-keymint/libkeymaster_portable.so",
+    "system/lib64/p720s20-keymint/libkeymint.so",
+    "system/lib64/p720s20-keymint/libpuresoftkeymasterdevice.so",
+    "system/lib64/p720s20-keymint/libtrusty.so",
+    "system/lib64/p720s20-keymint/libtrustyHalHelper.so",
 )
 
 

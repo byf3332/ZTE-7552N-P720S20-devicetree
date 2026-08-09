@@ -126,8 +126,8 @@ TW_INCLUDE_EROFS := true
 TW_INCLUDE_VFAT := true
 TW_INCLUDE_LPDUMP := true
 
-# Android 13 FBE metadata encryption. This enables the TWRP-side support;
-# vendor/keymaster integration may still require later device-specific work.
+# Android 13 FBE metadata encryption. The recovery root supplies the Unisoc
+# Trusty KeyMint 2.0/Gatekeeper services and their compatible VINTF manifest.
 TW_INCLUDE_CRYPTO := true
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libresetprop.so
 TW_INCLUDE_CRYPTO_FBE := true

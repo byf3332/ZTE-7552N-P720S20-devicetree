@@ -1,2 +1,26 @@
 # Device wrapper for the stock Unisoc recovery init fragment.
 import /init.recovery.common.rc
+
+# Android 13 uses Trusty KeyMint 2.0 while TWRP 12.1 ships a KeyMint V1
+# client. The stable AIDL V2 service is backward compatible with that client.
+service p720s20-keymint /system/bin/hw/android.hardware.security.keymint@2.0-unisoc.service.trusty
+    class early_hal
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64/p720s20-keymint:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
+service p720s20-gatekeeper /system/bin/hw/android.hardware.gatekeeper@1.0-service.trusty
+    class early_hal
+    user root
+    group root
+    setenv LD_LIBRARY_PATH /system/lib64/p720s20-keymint:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
+on property:init.svc.servicemanager=running
+    start p720s20-keymint
+
+on property:init.svc.hwservicemanager=running
+    start p720s20-gatekeeper
