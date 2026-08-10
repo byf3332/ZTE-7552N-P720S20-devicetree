@@ -15,6 +15,11 @@
         <version>1</version>
         <fqname>ISharedSecret/default</fqname>
     </hal>
+    <hal format="aidl">
+        <name>android.system.keystore2</name>
+        <version>1</version>
+        <fqname>IKeystoreService/default</fqname>
+    </hal>
     <hal format="hidl">
         <name>android.hardware.gatekeeper</name>
         <transport>hwbinder</transport>

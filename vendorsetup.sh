@@ -20,4 +20,6 @@ fi
 python3 "${_p720s20_tree_dir}/tools/install_generic_drm_backend.py" \
     "${_p720s20_tree_dir}/patches/graphics_drm.cpp" \
     "${_p720s20_android_top}/bootable/recovery/minuitwrp/graphics_drm.cpp" || return 1
+python3 "${_p720s20_tree_dir}/tools/install_p720s20_reboot_bcb.py" \
+    "${_p720s20_android_top}/bootable/recovery/twrp-functions.cpp" || return 1
 unset _p720s20_android_top _p720s20_tree_dir
