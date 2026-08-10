@@ -1,6 +1,10 @@
 # Device wrapper for the stock Unisoc recovery init fragment.
 import /init.recovery.common.rc
 
+# KeyMint 2.0 is storage-key compatible with the Keymaster 4.x client path.
+on early-init
+    setprop keymaster_ver 4.x
+
 # Android 13 uses Trusty KeyMint 2.0 while TWRP 12.1 ships a KeyMint V1
 # client. The stable AIDL V2 service is backward compatible with that client.
 service p720s20-keymint /system/bin/hw/android.hardware.security.keymint@2.0-unisoc.service.trusty
