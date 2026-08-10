@@ -21,8 +21,8 @@ service p720s20-keymint /system/bin/hw/android.hardware.security.keymint@2.0-uni
 
 service p720s20-gatekeeper /system/bin/hw/android.hardware.gatekeeper@1.0-service.trusty
     class early_hal
-    user root
-    group root
+    user system
+    group system
     setenv LD_LIBRARY_PATH /system/lib64/p720s20-keymint:/system/lib64
     seclabel u:r:recovery:s0
     disabled
@@ -30,5 +30,7 @@ service p720s20-gatekeeper /system/bin/hw/android.hardware.gatekeeper@1.0-servic
 on property:init.svc.servicemanager=running
     start p720s20-keymint
 
-on property:init.svc.hwservicemanager=running
+# The Gatekeeper TA needs Trusty/RPMB initialization to be complete. Starting
+# it when metadata encryption is ready also matches its first real consumer.
+on property:ro.crypto.fs_crypto_blkdev=*
     start p720s20-gatekeeper

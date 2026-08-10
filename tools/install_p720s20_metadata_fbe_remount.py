@@ -46,6 +46,43 @@ new = f'''#ifdef TW_INCLUDE_FBE
 			return -1;
 		}}
 
+		// Keystore2 starts before metadata-encrypted /data is available and
+		// initially opens an empty recovery database. Reload the real Android
+		// database after DE keys make it readable, so locksettings keys and
+		// their blobs remain available for Synthetic Password decryption.
+		property_set("ctl.stop", "keystore2");
+		char keystore_state[PROPERTY_VALUE_MAX];
+		for (int retry = 0; retry < 50; ++retry) {{
+			property_get("init.svc.keystore2", keystore_state, "");
+			if (strcmp(keystore_state, "stopped") == 0) break;
+			usleep(100000);
+		}}
+		property_get("init.svc.keystore2", keystore_state, "");
+		if (strcmp(keystore_state, "stopped") != 0) {{
+			LOGERR("Timed out stopping Keystore2 before database reload\\n");
+			return -1;
+		}}
+		int keystore_copy_result =
+			TWFunc::Exec_Cmd("cp /data/misc/keystore/persistent.sqlite "
+						"/tmp/misc/keystore/persistent.sqlite && "
+						"chown root:keystore /tmp/misc/keystore/persistent.sqlite && "
+						"chmod 0660 /tmp/misc/keystore/persistent.sqlite");
+		property_set("ctl.start", "keystore2");
+		for (int retry = 0; retry < 50; ++retry) {{
+			property_get("init.svc.keystore2", keystore_state, "");
+			if (strcmp(keystore_state, "running") == 0) break;
+			usleep(100000);
+		}}
+		property_get("init.svc.keystore2", keystore_state, "");
+		if (strcmp(keystore_state, "running") != 0) {{
+			LOGERR("Timed out restarting Keystore2 after database reload\\n");
+			return -1;
+		}}
+		if (keystore_copy_result != 0) {{
+			LOGERR("Unable to reload the Android Keystore2 database\\n");
+			return -1;
+		}}
+
 		bool user_need_decrypt = false;'''
 
 count = text.count(old)
