@@ -50,6 +50,20 @@ REQUIRED_TWRP_FILES = (
     "system/lib64/p720s20-keymint/libtrustyHalHelper.so",
 )
 
+STOCK_SECURITY_PATCH = "2024-08-05"
+
+
+def set_property(path: Path, name: str, value: str) -> None:
+    lines = path.read_text().splitlines()
+    prefix = name + "="
+    matches = [index for index, line in enumerate(lines) if line.startswith(prefix)]
+    if len(matches) != 1:
+        raise SystemExit(
+            f"expected exactly one {name} entry in {path}, found {len(matches)}"
+        )
+    lines[matches[0]] = prefix + value
+    path.write_text("\n".join(lines) + "\n")
+
 
 def main() -> None:
     if len(sys.argv) != 3:
@@ -74,6 +88,14 @@ def main() -> None:
                 f"required TWRP recovery file is missing: {path}"
             )
 
+    prop_default = recovery_root / "prop.default"
+    set_property(
+        prop_default, "ro.build.version.security_patch", STOCK_SECURITY_PATCH
+    )
+    set_property(
+        prop_default, "ro.vendor.build.security_patch", STOCK_SECURITY_PATCH
+    )
+
     for relative in STOCK_SERVICE_CONTEXTS:
         path = vendor_root / relative
         if not path.is_file():
@@ -94,8 +116,9 @@ def main() -> None:
         twrp_path.unlink()
 
     print(
-        "Prepared stock/TWRP ramdisk boundary: removed stock service "
-        "contexts and preserved stock product/system_ext mount points"
+        "Prepared stock/TWRP ramdisk boundary: installed stock security "
+        f"patch {STOCK_SECURITY_PATCH}, removed stock service contexts, "
+        "and preserved stock product/system_ext mount points"
     )
 
 
