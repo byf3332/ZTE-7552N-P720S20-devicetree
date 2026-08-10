@@ -10,10 +10,10 @@ def replace_one(text: str, old: str, new: str, name: str) -> str:
     return text.replace(old, new, 1)
 
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
     raise SystemExit(
         f"usage: {sys.argv[0]} "
-        "KEYMASTER_CPP KEYMASTER_H KEYSTORAGE_CPP METADATACRYPT_CPP"
+        "KEYMASTER_CPP KEYMASTER_H KEYSTORAGE_CPP METADATACRYPT_CPP KEYUTIL_CPP"
     )
 
 cpp_path = Path(sys.argv[1])
@@ -139,3 +139,41 @@ if metadata_marker not in metadata:
     print(f"Installed P720S20 non-checkpoint data mount in {metadata_path}")
 else:
     print(f"P720S20 non-checkpoint data mount already installed in {metadata_path}")
+
+
+keyutil_path = Path(sys.argv[5])
+keyutil = keyutil_path.read_text()
+keyutil_marker = "P720S20: create the fscrypt session keyring for recovery mounts"
+if keyutil_marker not in keyutil:
+    keyutil = replace_one(
+        keyutil,
+        '''static bool fscryptKeyring(key_serial_t* device_keyring) {
+    *device_keyring = keyctl_search(KEY_SPEC_SESSION_KEYRING, "keyring", "fscrypt", 0);
+    if (*device_keyring == -1) {
+        PLOG(ERROR) << "Unable to find device keyring";
+        return false;
+    }
+    return true;
+}''',
+        f'''static bool fscryptKeyring(key_serial_t* device_keyring) {{
+    *device_keyring = keyctl_search(KEY_SPEC_SESSION_KEYRING, "keyring", "fscrypt", 0);
+    if (*device_keyring == -1 && errno == ENOKEY) {{
+        // {keyutil_marker}.
+        *device_keyring =
+                add_key("keyring", "fscrypt", nullptr, 0, KEY_SPEC_SESSION_KEYRING);
+        if (*device_keyring != -1) {{
+            LOG(INFO) << "Created fscrypt session keyring with id " << *device_keyring;
+        }}
+    }}
+    if (*device_keyring == -1) {{
+        PLOG(ERROR) << "Unable to find or create device keyring";
+        return false;
+    }}
+    return true;
+}}''',
+        "fscrypt session keyring creation",
+    )
+    keyutil_path.write_text(keyutil)
+    print(f"Installed P720S20 fscrypt session keyring fix in {keyutil_path}")
+else:
+    print(f"P720S20 fscrypt session keyring fix already installed in {keyutil_path}")
