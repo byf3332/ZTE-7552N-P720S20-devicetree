@@ -30,6 +30,8 @@ REQUIRED_TWRP_FILES = (
     "system/etc/recovery.fstab",
     "init.recovery.common.rc",
     "init.recovery.ums9620.rc",
+    "lib/modules/sprd_thermal_r5p0.ko",
+    "lib/modules/sprd_soc_thm.ko",
     "init.recovery.ums9620_2h10.rc",
     "vendor/etc/vintf/manifest.xml",
     "system/bin/hw/android.hardware.gatekeeper@1.0-service.trusty",

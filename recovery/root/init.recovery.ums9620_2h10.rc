@@ -3,6 +3,10 @@ import /init.recovery.common.rc
 
 # KeyMint 2.0 is storage-key compatible with the Keymaster 4.x client path.
 on early-init
+    # soc-thmzone is a virtual sensor backed by the Unisoc r5p0 hardware zones.
+    # Load both providers before TWRP starts reading thermal_zone4.
+    insmod /lib/modules/sprd_thermal_r5p0.ko
+    insmod /lib/modules/sprd_soc_thm.ko
     setprop keymaster_ver 4.x
 
 # Android 13 uses Trusty KeyMint 2.0 while TWRP 12.1 ships a KeyMint V1
