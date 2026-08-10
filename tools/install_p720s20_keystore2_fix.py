@@ -10,8 +10,11 @@ def replace_one(text: str, old: str, new: str, name: str) -> str:
     return text.replace(old, new, 1)
 
 
-if len(sys.argv) != 4:
-    raise SystemExit(f"usage: {sys.argv[0]} KEYMASTER_CPP KEYMASTER_H KEYSTORAGE_CPP")
+if len(sys.argv) != 5:
+    raise SystemExit(
+        f"usage: {sys.argv[0]} "
+        "KEYMASTER_CPP KEYMASTER_H KEYSTORAGE_CPP METADATACRYPT_CPP"
+    )
 
 cpp_path = Path(sys.argv[1])
 cpp = cpp_path.read_text()
@@ -120,17 +123,19 @@ if storage_marker not in storage:
 else:
     print(f"P720S20 upgraded key blob guard already installed in {storage_path}")
 
-checkpoint_marker = "P720S20: recovery has no vold checkpoint lifecycle"
-storage = storage_path.read_text()
-if checkpoint_marker not in storage:
-    storage = replace_one(
-        storage,
-        """    if (cp_needsCheckpoint()) {""",
-        f"""    // {checkpoint_marker}; commit upgraded blobs immediately.
-    if (false) {{""",
-        "KeyStorage checkpoint handling",
+
+metadata_path = Path(sys.argv[4])
+metadata = metadata_path.read_text()
+metadata_marker = "P720S20: recovery must not query BootControl for vold checkpoints"
+if metadata_marker not in metadata:
+    metadata = replace_one(
+        metadata,
+        """                                    android::vold::cp_needsCheckpoint(), true);""",
+        f"""                                    // {metadata_marker}.
+                                    false, true);""",
+        "MetadataCrypt recovery checkpoint handling",
     )
-    storage_path.write_text(storage)
-    print(f"Installed P720S20 recovery checkpoint bypass in {storage_path}")
+    metadata_path.write_text(metadata)
+    print(f"Installed P720S20 non-checkpoint data mount in {metadata_path}")
 else:
-    print(f"P720S20 recovery checkpoint bypass already installed in {storage_path}")
+    print(f"P720S20 non-checkpoint data mount already installed in {metadata_path}")

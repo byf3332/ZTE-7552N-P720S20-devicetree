@@ -27,7 +27,8 @@ python3 "${_p720s20_tree_dir}/tools/install_p720s20_battery_status.py" \
 python3 "${_p720s20_tree_dir}/tools/install_p720s20_keystore2_fix.py" \
     "${_p720s20_android_top}/system/vold/Keymaster.cpp" \
     "${_p720s20_android_top}/system/vold/Keymaster.h" \
-    "${_p720s20_android_top}/system/vold/KeyStorage.cpp" || return 1
+    "${_p720s20_android_top}/system/vold/KeyStorage.cpp" \
+    "${_p720s20_android_top}/system/vold/MetadataCrypt.cpp" || return 1
 python3 "${_p720s20_tree_dir}/tools/install_p720s20_adb_reboot.py" \
     "${_p720s20_android_top}/system/core/reboot/reboot.c" || return 1
 unset _p720s20_android_top _p720s20_tree_dir
