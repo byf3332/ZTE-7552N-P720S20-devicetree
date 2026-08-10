@@ -51,6 +51,8 @@ REQUIRED_TWRP_FILES = (
 )
 
 STOCK_SECURITY_PATCH = "2024-08-05"
+STOCK_ANDROID_RELEASE = "13"
+STOCK_ANDROID_SDK = "33"
 
 
 def set_property(path: Path, name: str, value: str) -> None:
@@ -95,6 +97,13 @@ def main() -> None:
     set_property(
         prop_default, "ro.vendor.build.security_patch", STOCK_SECURITY_PATCH
     )
+    set_property(prop_default, "ro.build.version.release", STOCK_ANDROID_RELEASE)
+    set_property(
+        prop_default,
+        "ro.build.version.release_or_codename",
+        STOCK_ANDROID_RELEASE,
+    )
+    set_property(prop_default, "ro.build.version.sdk", STOCK_ANDROID_SDK)
 
     for relative in STOCK_SERVICE_CONTEXTS:
         path = vendor_root / relative
@@ -117,7 +126,8 @@ def main() -> None:
 
     print(
         "Prepared stock/TWRP ramdisk boundary: installed stock security "
-        f"patch {STOCK_SECURITY_PATCH}, removed stock service contexts, "
+        f"patch {STOCK_SECURITY_PATCH}, Android {STOCK_ANDROID_RELEASE} "
+        f"SDK {STOCK_ANDROID_SDK}, removed stock service contexts, "
         "and preserved stock product/system_ext mount points"
     )
 
