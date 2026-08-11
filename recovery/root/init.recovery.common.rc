@@ -28,6 +28,7 @@ on init
     start create_splloader_dual_slot_byname_path
 
     export PATH /sbin:/system/bin:/vendor/bin
+    export TZ TAIST-8
     export SECONDARY_STORAGE /storage/sdcard0
 
     mkdir /storage
