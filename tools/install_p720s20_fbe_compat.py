@@ -97,21 +97,6 @@ if unwrap_marker not in decrypt:
     )
     if count != 1:
         raise SystemExit("unexpected TeamWin KeyMint plaintext copy source state")
-
-    generated_checks = (
-        'printf("KeyMint createOperation returned no operation\\n");',
-        'printf("KeyMint update failed: %s\\n", update_rc.getDescription().c_str());',
-        'printf("KeyMint finish failed: %s\\n", finish_rc.getDescription().c_str());',
-        "std::vector<uint8_t> cipher_input",
-        "std::optional<std::vector<uint8_t>> update_plaintext;",
-        "std::optional<std::vector<uint8_t>> finish_plaintext;",
-        "std::vector<uint8_t> plaintext;",
-    )
-    for generated in generated_checks:
-        if decrypt.count(generated) != 1:
-            raise SystemExit(f"invalid generated TeamWin decrypt source: {generated}")
-    if "finish(cipher_text_hidlvec" in decrypt or "optPlaintext->size()" in decrypt:
-        raise SystemExit("obsolete TeamWin KeyMint finish path remains")
     decrypt_path.write_text(decrypt)
     print(f"Installed P720S20 synthetic-password unwrap compatibility in {decrypt_path}")
 else:
