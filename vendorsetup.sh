@@ -17,6 +17,8 @@ if [[ -z "${_p720s20_android_top}" ]]; then
     echo "P720S20: unable to locate Android build root" >&2
     return 1
 fi
+patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
+    < "${_p720s20_tree_dir}/patches/default_timezone.patch" || return 1
 python3 "${_p720s20_tree_dir}/tools/install_generic_drm_backend.py" \
     "${_p720s20_tree_dir}/patches/graphics_drm.cpp" \
     "${_p720s20_android_top}/bootable/recovery/minuitwrp/graphics_drm.cpp" || return 1
