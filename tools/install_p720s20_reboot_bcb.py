@@ -86,9 +86,9 @@ s = one(s, """\t\tcase rb_recovery:
 s = one(s, """\t\tcase rb_fastboot:
 \t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,fastboot");
 """, """\t\tcase rb_fastboot:
-\t\t\tif (!WriteP720S20BootloaderMessage("", ""))
+\t\t\tif (!WriteP720S20BootloaderMessage("boot-recovery", "recovery\\n--fastboot\\n"))
 \t\t\t\treturn -1;
-\t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,fastboot");
+\t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,");
 """, "fastbootd reboot")
 
 target.write_text(s)
