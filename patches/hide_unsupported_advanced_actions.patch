@@ -1,0 +1,37 @@
+diff --git a/gui/theme/common/portrait.xml b/gui/theme/common/portrait.xml
+index b919b11..12717d4 100644
+--- a/gui/theme/common/portrait.xml
++++ b/gui/theme/common/portrait.xml
+@@ -3904,17 +3904,6 @@
+ 						<action function="page">confirm_action</action>
+ 					</actions>
+ 				</listitem>
+-				<listitem name="{@install_twrp_ramdisk=Install Recovery Ramdisk}">
+-					<conditions>
+-						<condition var1="tw_has_boot_slots" var2="1"/>
+-						<condition var1="tw_has_repack_tools" var2="1"/>
+-						<condition var1="tw_include_install_recovery_ramdisk" var2="1"/>
+-					</conditions>
+-					<actions>
+-						<action function="set">tw_repack_kernel=0</action>
+-						<action function="page">repackselect</action>
+-					</actions>
+-				</listitem>
+ 				<listitem name="{@reflash_twrp=Flash Current TWRP}">
+ 					<conditions>
+ 						<condition var1="tw_has_boot_slots" var2="1"/>
+@@ -3959,14 +3948,6 @@
+ 						<action function="page">confirm_action</action>
+ 					</actions>
+ 				</listitem>
+-				<listitem name="{@reboot_install_app_hdr=Install TWRP App}">
+-					<condition var1="tw_app_install_status" var2="1"/>
+-					<actions>
+-						<action function="set">tw_back=advanced</action>
+-						<action function="set">tw_appinstall_title={@advanced_hdr=Advanced}</action>
+-						<action function="page">installapp</action>
+-					</actions>
+-				</listitem>
+ 				<listitem name="{@uninstall_twrp_system_app=Uninstall TWRP App from System}">
+ 					<condition var1="tw_app_installed_in_system" var2="1"/>
+ 					<actions>

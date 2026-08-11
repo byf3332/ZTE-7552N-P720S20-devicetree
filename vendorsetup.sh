@@ -19,6 +19,10 @@ if [[ -z "${_p720s20_android_top}" ]]; then
 fi
 patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
     < "${_p720s20_tree_dir}/patches/default_timezone.patch" || return 1
+patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
+    < "${_p720s20_tree_dir}/patches/single_user_decryption_state.patch" || return 1
+patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
+    < "${_p720s20_tree_dir}/patches/hide_unsupported_advanced_actions.patch" || return 1
 python3 "${_p720s20_tree_dir}/tools/install_generic_drm_backend.py" \
     "${_p720s20_tree_dir}/patches/graphics_drm.cpp" \
     "${_p720s20_android_top}/bootable/recovery/minuitwrp/graphics_drm.cpp" || return 1

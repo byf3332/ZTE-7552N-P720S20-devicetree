@@ -144,6 +144,7 @@ TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_USE_LEGACY_BATTERY_SERVICES := true
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone4/temp"
 TW_EXCLUDE_TWRPAPP := true
+TW_NO_FLASH_CURRENT_TWRP := true
 # Stock init.recovery.common.rc owns the Unisoc configfs USB gadget setup.
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_USE_TOOLBOX := true

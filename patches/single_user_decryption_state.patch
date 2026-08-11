@@ -1,0 +1,12 @@
+diff --git a/partitionmanager.cpp b/partitionmanager.cpp
+index 98ffb79..f39d2b8 100755
+--- a/partitionmanager.cpp
++++ b/partitionmanager.cpp
+@@ -2009,6 +2009,7 @@ void TWPartitionManager::Bind_Mount(TWPartition* dat) {
+ 
+ void TWPartitionManager::Parse_Users() {
+ #ifdef TW_INCLUDE_FBE
++	Users_List.clear();
+ 	char user_check_result[PROPERTY_VALUE_MAX];
+ 	for (int userId = 0; userId <= 9999; userId++) {
+ 		string prop = "twrp.user." + to_string(userId) + ".decrypt";
