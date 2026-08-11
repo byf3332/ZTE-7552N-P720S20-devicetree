@@ -1,0 +1,25 @@
+diff --git a/mtp/ffs/MtpDescriptors.cpp b/mtp/ffs/MtpDescriptors.cpp
+--- a/mtp/ffs/MtpDescriptors.cpp
++++ b/mtp/ffs/MtpDescriptors.cpp
+@@ -261,15 +261,12 @@ const struct desc_v1 ptp_desc_v1 = {
+ };
+ 
+ bool writeDescriptors(int fd, bool ptp) {
+-	ssize_t ret = TEMP_FAILURE_RETRY(write(fd,
+-				&(ptp ? ptp_desc_v2 : mtp_desc_v2), sizeof(desc_v2)));
++	// P720S20's Unisoc FunctionFS does not create endpoints from this v2
++	// descriptor set. Use the equivalent FS/HS v1 set used by legacy FFS.
++	ssize_t ret = TEMP_FAILURE_RETRY(write(fd,
++				&(ptp ? ptp_desc_v1 : mtp_desc_v1), sizeof(desc_v1)));
+ 	if (ret < 0) {
+-		MTPE("Switching to V1 descriptor format\n");
+-		ret = TEMP_FAILURE_RETRY(write(fd,
+-					&(ptp ? ptp_desc_v1 : mtp_desc_v1), sizeof(desc_v1)));
+-		if (ret < 0) {
+-			MTPE("Writing descriptors failed\n");
+-			return false;
+-		}
++		MTPE("Writing V1 descriptors failed\n");
++		return false;
+ 	}
+ 	ret = TEMP_FAILURE_RETRY(write(fd, &mtp_strings, sizeof(mtp_strings)));
