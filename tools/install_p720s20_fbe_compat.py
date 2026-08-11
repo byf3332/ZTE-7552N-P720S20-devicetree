@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import sys
 from pathlib import Path
 
@@ -39,50 +40,17 @@ decrypt_path = Path(sys.argv[2])
 decrypt = decrypt_path.read_text()
 unwrap_marker = "P720S20: collect Unisoc KeyMint output from update and finish"
 if unwrap_marker not in decrypt:
-    decrypt = replace_one(
+    decrypt, count = re.subn(
+        r'''[ \t]*::keystore::hidl_vec<uint8_t> cipher_text_hidlvec;\n\n[ \t]*cipher_text_hidlvec\.setToExternal\(cipher_text, spblob_data\.size\(\) - 14 /\* 1 each for version and SYNTHETIC_PASSWORD_PASSWORD_BASED and 12 for the iv \*/\);\n''',
+        "",
         decrypt,
-        '''            auto keystore = ks2::IKeystoreService::fromBinder(keystoreBinder);
-            auto rc = keystore->getKeyEntry(keyDescriptor(keystore_alias), &keyEntryResponse);''',
-        '''            auto keystore = ks2::IKeystoreService::fromBinder(keystoreBinder);
-            if (!keystore) {
-                printf("Keystore2 service is unavailable during synthetic password unwrap\\n");
-                return disk_decryption_secret_key;
-            }
-            auto rc = keystore->getKeyEntry(keyDescriptor(keystore_alias), &keyEntryResponse);''',
-        "Keystore2 null guard",
+        count=1,
     )
-    decrypt = replace_one(
-        decrypt,
-        '''            ks2::CreateOperationResponse encOperationResponse;
-            auto begin_rc = keyResponse.iSecurityLevel->createOperation(''',
-        '''            if (!keyResponse.iSecurityLevel) {
-                printf("Keystore2 key entry has no security level\\n");
-                return disk_decryption_secret_key;
-            }
-            ks2::CreateOperationResponse encOperationResponse;
-            auto begin_rc = keyResponse.iSecurityLevel->createOperation(''',
-        "KeyMint security-level null guard",
-    )
-    decrypt = replace_one(
-        decrypt,
-        '''            ::keystore::hidl_vec<uint8_t> cipher_text_hidlvec;
+    if count != 1:
+        raise SystemExit("unexpected TeamWin obsolete finish-input buffer source state")
 
-            cipher_text_hidlvec.setToExternal(cipher_text, spblob_data.size() - 14 /* 1 each for version and SYNTHETIC_PASSWORD_PASSWORD_BASED and 12 for the iv */);''',
-        '''''',
-        "obsolete finish-input buffer",
-    )
-    decrypt = replace_one(
-        decrypt,
-        '''            std::optional<std::vector<uint8_t>> optPlaintext;
-
-            begin_rc = encOperationResponse.iOperation->finish(cipher_text_hidlvec, {}, &optPlaintext);
-            if (!begin_rc.isOk()) {
-                printf("finish reponse failed");
-                return disk_decryption_secret_key;
-            }
-
-            size_t keystore_result_size = optPlaintext->size();''',
-        f'''            if (!encOperationResponse.iOperation) {{
+    pattern = r'''[ \t]*std::optional<std::vector<uint8_t>> optPlaintext;\n\n[ \t]*begin_rc = encOperationResponse\.iOperation->finish\(cipher_text_hidlvec, \{\}, &optPlaintext\);\n[ \t]*if \(!begin_rc\.isOk\(\)\) \{\n[ \t]*printf\("finish reponse failed"\);\n[ \t]*return disk_decryption_secret_key;\n[ \t]*\}\n\n[ \t]*size_t keystore_result_size = optPlaintext->size\(\);'''
+    replacement = f'''            if (!encOperationResponse.iOperation) {{
                 printf("KeyMint createOperation returned no operation\\n");
                 return disk_decryption_secret_key;
             }}
@@ -111,15 +79,19 @@ if unwrap_marker not in decrypt:
                 printf("KeyMint returned an invalid synthetic password plaintext size: %zu\\n", plaintext.size());
                 return disk_decryption_secret_key;
             }}
-            size_t keystore_result_size = plaintext.size();''',
-        "Unisoc KeyMint update/finish handling",
-    )
-    decrypt = replace_one(
+            size_t keystore_result_size = plaintext.size();'''
+    decrypt, count = re.subn(pattern, replacement, decrypt, count=1)
+    if count != 1:
+        raise SystemExit("unexpected TeamWin KeyMint finish source state")
+
+    decrypt, count = re.subn(
+        r'memcpy\(keystore_result, &optPlaintext->front\(\), keystore_result_size\);',
+        'memcpy(keystore_result, plaintext.data(), keystore_result_size);',
         decrypt,
-        '''            memcpy(keystore_result, &optPlaintext->front(), keystore_result_size);''',
-        '''            memcpy(keystore_result, plaintext.data(), keystore_result_size);''',
-        "KeyMint plaintext copy",
+        count=1,
     )
+    if count != 1:
+        raise SystemExit("unexpected TeamWin KeyMint plaintext copy source state")
     decrypt_path.write_text(decrypt)
     print(f"Installed P720S20 synthetic-password unwrap compatibility in {decrypt_path}")
 else:
