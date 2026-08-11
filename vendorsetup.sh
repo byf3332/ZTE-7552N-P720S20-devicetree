@@ -34,6 +34,9 @@ python3 "${_p720s20_tree_dir}/tools/install_p720s20_metadata_fbe_remount.py" \
     "${_p720s20_android_top}/bootable/recovery/partitionmanager.cpp" || return 1
 python3 "${_p720s20_tree_dir}/tools/install_p720s20_gatekeeper_token_guard.py" \
     "${_p720s20_android_top}/system/vold/Decrypt.cpp" || return 1
+python3 "${_p720s20_tree_dir}/tools/install_p720s20_fbe_compat.py" \
+    "${_p720s20_android_top}/system/vold/FsCrypt.cpp" \
+    "${_p720s20_android_top}/system/vold/Decrypt.cpp" || return 1
 python3 "${_p720s20_tree_dir}/tools/install_p720s20_adb_reboot.py" \
     "${_p720s20_android_top}/system/core/reboot/reboot.c" || return 1
 unset _p720s20_android_top _p720s20_tree_dir
