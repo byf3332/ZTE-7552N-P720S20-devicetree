@@ -1,0 +1,14 @@
+diff --git a/twrp.cpp b/twrp.cpp
+index 7b526ef..5370f84 100755
+--- a/twrp.cpp
++++ b/twrp.cpp
+@@ -476,6 +476,9 @@ int main(int argc, char **argv) {
+ 	static std::thread battery_monitor(monitorBatteryInBackground);
+ 
+ 	twrpAdbBuFifo *adb_bu_fifo = new twrpAdbBuFifo();
++	PageManager::LoadLanguage(DataManager::GetStrValue("tw_language"));
++	GUIConsole::Translate_Now();
++
+ 	TWFunc::Clear_Bootloader_Message();
+ 
+ 	if (startup.Get_Fastboot_Mode()) {

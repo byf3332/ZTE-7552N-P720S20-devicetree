@@ -1,5 +1,5 @@
 diff --git a/data.cpp b/data.cpp
-index 76048aa..add3b60 100644
+index 76048aa..685407e 100644
 --- a/data.cpp
 +++ b/data.cpp
 @@ -753,18 +753,18 @@ void DataManager::SetDefaultValues()
@@ -24,3 +24,12 @@ index 76048aa..add3b60 100644
  	mPersist.SetValue(TW_AUTO_REFLASHTWRP_VAR, "0");
  #ifdef TW_NO_FLASH_CURRENT_TWRP
  	mConst.SetValue("tw_no_flash_current_twrp", "1");
+@@ -787,7 +787,7 @@ void DataManager::SetDefaultValues()
+ 	mData.SetValue("tw_terminal_state", "0");
+ 	mData.SetValue("tw_background_thread_running", "0");
+ 	mData.SetValue(TW_RESTORE_FILE_DATE, "0");
+-	mPersist.SetValue("tw_military_time", "0");
++	mPersist.SetValue("tw_military_time", "1");
+ 
+ #ifdef TW_INCLUDE_CRYPTO
+ 	mPersist.SetValue(TW_USE_SHA2, "1");

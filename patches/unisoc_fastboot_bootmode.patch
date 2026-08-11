@@ -1,0 +1,16 @@
+diff --git a/twrp.cpp b/twrp.cpp
+index 5370f84..cf3c091 100755
+--- a/twrp.cpp
++++ b/twrp.cpp
+@@ -481,7 +481,10 @@ int main(int argc, char **argv) {
+ 
+ 	TWFunc::Clear_Bootloader_Message();
+ 
+-	if (startup.Get_Fastboot_Mode()) {
++	char boot_mode[PROPERTY_VALUE_MAX];
++	property_get("ro.bootmode", boot_mode, "");
++	if (startup.Get_Fastboot_Mode() || strcmp(boot_mode, "fastboot") == 0) {
++		LOGINFO("Entering fastbootd for boot mode '%s'\n", boot_mode);
+ 		process_fastbootd_mode();
+ 		delete adb_bu_fifo;
+ 		TWFunc::Update_Intent_File(startup.Get_Intent());

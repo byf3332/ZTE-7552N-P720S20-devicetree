@@ -20,6 +20,10 @@ fi
 patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
     < "${_p720s20_tree_dir}/patches/default_timezone.patch" || return 1
 patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
+    < "${_p720s20_tree_dir}/patches/load_default_language_before_decrypt.patch" || return 1
+patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
+    < "${_p720s20_tree_dir}/patches/unisoc_fastboot_bootmode.patch" || return 1
+patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
     < "${_p720s20_tree_dir}/patches/single_user_decryption_state.patch" || return 1
 patch -d "${_p720s20_android_top}/bootable/recovery" -p1 \
     < "${_p720s20_tree_dir}/patches/hide_unsupported_advanced_actions.patch" || return 1
