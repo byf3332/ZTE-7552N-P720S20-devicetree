@@ -36,4 +36,4 @@
 /data              f2fs      /dev/block/by-name/userdata          flags=display=data;fsflags="noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,inline_xattr,inline_data,inlinecrypt,fsync_mode=nobarrier";quota;check;fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption
 /cache             ext4      /dev/block/by-name/cache             flags=display=cache
 /prodnv            ext4      /dev/block/by-name/prodnv            flags=display=prodnv
-/usb-otg           vfat      /dev/block/sda*                      flags=display="USB-OTG";storage;removable
+/usb-otg           auto      /dev/block/sda1                      /dev/block/sda flags=storage;removable

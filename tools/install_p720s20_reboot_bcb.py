@@ -87,17 +87,17 @@ s = one(s, """\t\tcase rb_recovery:
 \t\t\tif (!WriteP720S20BootloaderMessage("", ""))
 \t\t\t\treturn -1;
 \t\t\tcheck_and_run_script("/system/bin/rebootbootloader.sh", "reboot bootloader");
-\t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,bootloader");
+\t\t\treturn syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+\t\t\t                  LINUX_REBOOT_CMD_RESTART2,
+\t\t\t                  const_cast<char*>("bootloader"));
 """, "recovery and bootloader reboot")
 
 s = one(s, """\t\tcase rb_fastboot:
 \t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,fastboot");
 """, """\t\tcase rb_fastboot:
-\t\t\tif (!WriteP720S20BootloaderMessage("", ""))
+\t\t\tif (!WriteP720S20BootloaderMessage("boot-fastboot", "recovery\\n--fastboot\\n"))
 \t\t\t\treturn -1;
-\t\t\treturn syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
-\t\t\t                  LINUX_REBOOT_CMD_RESTART2,
-\t\t\t                  const_cast<char*>("fastboot"));
+\t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,");
 """, "fastbootd reboot")
 
 target.write_text(s)
