@@ -14,13 +14,6 @@ if "WriteP720S20BootloaderMessage" in s:
     print(f"P720S20 BCB reboot handling already installed in {target}")
     raise SystemExit(0)
 
-s = one(s, """#include <sys/reboot.h>
-#include <sys/sendfile.h>
-""", """#include <sys/reboot.h>
-#include <sys/syscall.h>
-#include <sys/sendfile.h>
-""", "reboot syscall include")
-
 s = one(s, """void TWFunc::Clear_Bootloader_Message() {
 \tstd::string err;
 \tif (!clear_bootloader_message(&err)) {
@@ -93,11 +86,7 @@ s = one(s, """\t\tcase rb_recovery:
 s = one(s, """\t\tcase rb_fastboot:
 \t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,fastboot");
 """, """\t\tcase rb_fastboot:
-\t\t\tif (!WriteP720S20BootloaderMessage("boot-fastboot", ""))
-\t\t\t\treturn -1;
-\t\t\treturn syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
-\t\t\t                  LINUX_REBOOT_CMD_RESTART2,
-\t\t\t                  const_cast<char*>("recovery"));
+\t\t\treturn property_set(ANDROID_RB_PROPERTY, "reboot,fastboot");
 """, "fastbootd reboot")
 
 target.write_text(s)
