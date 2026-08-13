@@ -28,6 +28,7 @@ REQUIRED_TWRP_FILES = (
     "system/bin/init",
     "system/bin/recovery",
     "system/etc/recovery.fstab",
+    "system/etc/twrp.fstab",
     "init.recovery.common.rc",
     "init.recovery.ums9620.rc",
     "lib/modules/sprd_thermal_r5p0.ko",

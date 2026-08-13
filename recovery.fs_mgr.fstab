@@ -1,0 +1,2 @@
+# Android fs_mgr fstab used by init and the recovery BootControl HAL.
+/dev/block/by-name/misc /misc emmc defaults defaults

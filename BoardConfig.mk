@@ -107,7 +107,7 @@ TARGET_NO_RECOVERY := true
 # Setting it would create a separate VENDOR_RAMDISK_TYPE_RECOVERY fragment,
 # which does not match the stock P720S20 vendor_boot layout.
 
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fs_mgr.fstab
 
 # Seed the PLATFORM ramdisk with the complete stock vendor ramdisk.
 # Disable Android first-stage AVB because this device's TrustOS bypass does not
