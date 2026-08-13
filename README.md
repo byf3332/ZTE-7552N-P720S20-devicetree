@@ -31,8 +31,6 @@ TeamWin Recovery Project 12.1 device tree for the ZTE 7552N (`P720S20`,
 - EROFS logical partition mounting
 - Reboot to Android, recovery, and bootloader
 - Fastbootd support
-- Simplified Chinese interface before data decryption
-- 24-hour clock and UTC+8 timezone
 - CPU temperature reporting
 - Battery level and charging-state reporting
 
