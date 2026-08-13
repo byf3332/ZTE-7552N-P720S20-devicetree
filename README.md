@@ -34,6 +34,14 @@ TeamWin Recovery Project 12.1 device tree for the ZTE 7552N (`P720S20`,
 - CPU temperature reporting
 - Battery level and charging-state reporting
 
+## Not verified functions
+
+These functions are available but have not been tested on the device:
+
+- Installation
+- Wipe
+- Backup
+
 ## Vendor boot layout
 
 The device has no standalone recovery partition. Recovery resources are stored
