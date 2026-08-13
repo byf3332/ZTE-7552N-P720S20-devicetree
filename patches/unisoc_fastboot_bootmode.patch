@@ -2,13 +2,19 @@ diff --git a/startupArgs.cpp b/startupArgs.cpp
 index 2a59473..61dd546 100755
 --- a/startupArgs.cpp
 +++ b/startupArgs.cpp
-@@ -20,6 +20,11 @@ Copyright 2012-2021 TeamWin
+@@ -20,6 +20,17 @@ Copyright 2012-2021 TeamWin
  void startupArgs::parse(int *argc, char ***argv) {
  	std::vector<std::string> args = args::get_args(argc, argv);
  	int index;
++	bootloader_message boot = {};
++	std::string boot_message_error;
++	const bool have_boot_message = read_bootloader_message_from(
++		&boot, "/dev/block/by-name/misc", &boot_message_error);
++	const std::string boot_command = have_boot_message ? std::string(boot.command) : "";
 +	const std::string boot_mode = android::base::GetProperty("ro.bootmode", "");
-+	if (args.size() == 1 && boot_mode == "fastboot") {
-+		LOGINFO("Adding --fastboot for Unisoc boot mode '%s'\n", boot_mode.c_str());
++	if (args.size() == 1 && (boot_command == "boot-fastboot" || boot_mode == "fastboot")) {
++		LOGINFO("Adding --fastboot for Unisoc boot command '%s', mode '%s'\n",
++			boot_command.c_str(), boot_mode.c_str());
 +		args.emplace_back(FASTBOOT);
 +	}
  
