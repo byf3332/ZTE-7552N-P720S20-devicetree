@@ -15,7 +15,7 @@ PRODUCT_BUILD_SUPER_PARTITION := false
 # Build the BootControl implementation against the same Android 12.1
 # userspace as fastbootd. It overlays the incompatible stock Android 13
 # implementation from the seeded vendor ramdisk.
-PRODUCT_PACKAGES += android.hardware.boot@1.2-impl
+PRODUCT_PACKAGES += android.hardware.boot@1.2-impl.recovery
 
 # Keep the product lean: the stock first-stage fstab and vendor kernel modules
 # are injected into the recovery root by BOARD_RECOVERY_IMAGE_PREPARE.
