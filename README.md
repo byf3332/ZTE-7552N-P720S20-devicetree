@@ -25,6 +25,8 @@ TeamWin Recovery Project 12.1 device tree for the ZTE 7552N (`P720S20`,
 - TWRP recovery startup
 - User 0 FBE password decryption
 - Internal storage access
+- Recovery ADB access
+- USB OTG storage mounting
 - MTP file transfer
 - EROFS logical partition mounting
 - Reboot to Android, recovery, and bootloader
