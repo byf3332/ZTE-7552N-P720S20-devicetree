@@ -63,6 +63,11 @@ service p720s20-gatekeeper /system/bin/hw/android.hardware.gatekeeper@1.0-servic
     seclabel u:r:recovery:s0
     disabled
 
+# fastbootd blocks until the recovery Health HAL is registered. Start the
+# existing 2.1 service before it opens the fastboot FunctionFS endpoints.
+on property:sys.usb.config=fastboot
+    start health-hal-2-1
+
 on property:init.svc.servicemanager=running
     start p720s20-keymint
 
