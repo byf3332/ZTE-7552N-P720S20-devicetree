@@ -28,6 +28,7 @@ TeamWin Recovery Project 12.1 device tree for the ZTE 7552N (`P720S20`,
 - MTP file transfer
 - EROFS logical partition mounting
 - Reboot to Android, recovery, and bootloader
+- Fastbootd support
 - Simplified Chinese interface before data decryption
 - 24-hour clock and UTC+8 timezone
 - CPU temperature reporting
@@ -41,7 +42,3 @@ in `vendor_boot` using the stock layout:
 - one `PLATFORM` vendor ramdisk table entry
 - generic kernel image boot flow
 - stock device tree blob
-
-The vendor ramdisk combines the stock platform environment with the TWRP
-recovery userspace. Stock first-stage files, fstab variants, kernel modules, and
-platform services are preserved for the device boot chain.
