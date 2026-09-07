@@ -10,7 +10,6 @@
 /dtbo              emmc      /dev/block/by-name/dtbo              flags=display=dtbo;slotselect
 /boot              emmc      /dev/block/by-name/boot              flags=display=boot;slotselect
 /vendor_boot       emmc      /dev/block/by-name/vendor_boot       flags=display=vendor_boot;slotselect
-/init_boot         emmc      /dev/block/by-name/init_boot         flags=display=init_boot;slotselect
 /super             emmc      /dev/block/by-name/super             flags=display=super
 /ltedsp            emmc      /dev/block/by-name/l_ldsp            flags=display=ltedsp;slotselect
 /ltegdsp           emmc      /dev/block/by-name/l_gdsp            flags=display=ltegdsp;slotselect
