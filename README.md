@@ -5,7 +5,7 @@ TeamWin Recovery Project 12.1 device tree for the ZTE 7552N (`P720S20`,
 
 ## Current build
 
-[Release 332950100396](https://github.com/byf3332/Lazy_Action-Recoverys-Builder/releases/tag/32950100396)
+[Release 34083290880](https://github.com/byf3332/Lazy_Action-Recoverys-Builder/releases/tag/34083290880)
 
 ## Device information
 
